@@ -301,5 +301,20 @@
   <ItemGroup>
     <None Include="Resources\entry1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\background_coffe.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\frosted_glass_coffee.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-username-24 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-password-24 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ogo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -14,11 +14,13 @@ namespace Polycafe_GUI
     {
         private string currentVaiTro; // "1" cho Admin, "0" cho nhân viên
         // Thêm các using cần thiết cho các UserControl
-        public MainForm(string vaiTro)
+        private string emailDangNhap;
+        public MainForm(string vaiTro, string email)
         {
             InitializeComponent();
             SetupSideMenu();
             currentVaiTro = vaiTro; // lấy từ kết quả đăng nhập 
+            this.emailDangNhap = email;
             SetupSideMenu();
         }
 
@@ -78,8 +80,10 @@ namespace Polycafe_GUI
                 }
                 else if (clickedButton.Text == "Cài đặt")
                 {
-                    newContentControl = new CaiDat();
+                    var caiDatControl = new CaiDat(emailDangNhap);  // ✅ Truyền đúng email
+                    newContentControl = caiDatControl;
                 }
+
                 else if (clickedButton.Text == "Thống kê")
                 {
                     newContentControl = new ThongKe(currentVaiTro);
@@ -135,6 +139,26 @@ namespace Polycafe_GUI
         private void button7_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+            foreach (Control control in flowLayoutPanel1.Controls)
+            {
+                if (control is Button button)
+                {
+                    button.Click += MenuItem_Click;
+
+                    if (button.Text == "Nhân viên" && currentVaiTro != "1")
+                    {
+                        button.Visible = false;
+                    }
+                    if (button.Text == "Thống kê" && currentVaiTro != "1")
+                    {
+                        button.Visible = false;
+                    }
+                }
+            }
         }
     }
 }

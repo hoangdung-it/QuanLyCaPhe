@@ -61,6 +61,7 @@ namespace Polycafe_GUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -68,6 +69,7 @@ namespace Polycafe_GUI
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -84,6 +86,7 @@ namespace Polycafe_GUI
             this.tabControl1.Size = new System.Drawing.Size(1815, 947);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.Tag = "";
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -115,10 +118,10 @@ namespace Polycafe_GUI
             // pictureBox3
             // 
             this.pictureBox3.Image = global::Polycafe_GUI.Properties.Resources.lo;
-            this.pictureBox3.Location = new System.Drawing.Point(1039, 233);
+            this.pictureBox3.Location = new System.Drawing.Point(1115, 63);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(155, 106);
+            this.pictureBox3.Size = new System.Drawing.Size(154, 145);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 15;
             this.pictureBox3.TabStop = false;
@@ -126,7 +129,7 @@ namespace Polycafe_GUI
             // chkShowConfirmPassword
             // 
             this.chkShowConfirmPassword.AutoSize = true;
-            this.chkShowConfirmPassword.Location = new System.Drawing.Point(1023, 499);
+            this.chkShowConfirmPassword.Location = new System.Drawing.Point(1078, 556);
             this.chkShowConfirmPassword.Margin = new System.Windows.Forms.Padding(4);
             this.chkShowConfirmPassword.Name = "chkShowConfirmPassword";
             this.chkShowConfirmPassword.Size = new System.Drawing.Size(130, 20);
@@ -138,7 +141,7 @@ namespace Polycafe_GUI
             // chkShowNewPassword
             // 
             this.chkShowNewPassword.AutoSize = true;
-            this.chkShowNewPassword.Location = new System.Drawing.Point(1023, 454);
+            this.chkShowNewPassword.Location = new System.Drawing.Point(1078, 469);
             this.chkShowNewPassword.Margin = new System.Windows.Forms.Padding(4);
             this.chkShowNewPassword.Name = "chkShowNewPassword";
             this.chkShowNewPassword.Size = new System.Drawing.Size(130, 20);
@@ -150,7 +153,7 @@ namespace Polycafe_GUI
             // chkShowOldPassword
             // 
             this.chkShowOldPassword.AutoSize = true;
-            this.chkShowOldPassword.Location = new System.Drawing.Point(1023, 406);
+            this.chkShowOldPassword.Location = new System.Drawing.Point(1078, 382);
             this.chkShowOldPassword.Margin = new System.Windows.Forms.Padding(4);
             this.chkShowOldPassword.Name = "chkShowOldPassword";
             this.chkShowOldPassword.Size = new System.Drawing.Size(130, 20);
@@ -164,10 +167,10 @@ namespace Polycafe_GUI
             this.btnChangePassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChangePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.btnChangePassword.Image = global::Polycafe_GUI.Properties.Resources.arrows1;
-            this.btnChangePassword.Location = new System.Drawing.Point(1023, 541);
+            this.btnChangePassword.Location = new System.Drawing.Point(1143, 631);
             this.btnChangePassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnChangePassword.Name = "btnChangePassword";
-            this.btnChangePassword.Size = new System.Drawing.Size(100, 52);
+            this.btnChangePassword.Size = new System.Drawing.Size(126, 63);
             this.btnChangePassword.TabIndex = 11;
             this.btnChangePassword.Text = "Đổi";
             this.btnChangePassword.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
@@ -176,44 +179,52 @@ namespace Polycafe_GUI
             // 
             // txtConfirmPassword
             // 
-            this.txtConfirmPassword.Location = new System.Drawing.Point(809, 495);
+            this.txtConfirmPassword.Location = new System.Drawing.Point(809, 531);
             this.txtConfirmPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtConfirmPassword.Multiline = true;
             this.txtConfirmPassword.Name = "txtConfirmPassword";
             this.txtConfirmPassword.PasswordChar = '*';
-            this.txtConfirmPassword.Size = new System.Drawing.Size(189, 22);
+            this.txtConfirmPassword.Size = new System.Drawing.Size(262, 45);
             this.txtConfirmPassword.TabIndex = 10;
+            this.txtConfirmPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtNewPassword
             // 
-            this.txtNewPassword.Location = new System.Drawing.Point(809, 451);
+            this.txtNewPassword.Location = new System.Drawing.Point(809, 444);
             this.txtNewPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtNewPassword.Multiline = true;
             this.txtNewPassword.Name = "txtNewPassword";
             this.txtNewPassword.PasswordChar = '*';
-            this.txtNewPassword.Size = new System.Drawing.Size(189, 22);
+            this.txtNewPassword.Size = new System.Drawing.Size(262, 45);
             this.txtNewPassword.TabIndex = 9;
+            this.txtNewPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtOldPassword
             // 
-            this.txtOldPassword.Location = new System.Drawing.Point(809, 402);
+            this.txtOldPassword.Location = new System.Drawing.Point(809, 357);
             this.txtOldPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtOldPassword.Multiline = true;
             this.txtOldPassword.Name = "txtOldPassword";
             this.txtOldPassword.PasswordChar = '*';
-            this.txtOldPassword.Size = new System.Drawing.Size(189, 22);
+            this.txtOldPassword.Size = new System.Drawing.Size(262, 45);
             this.txtOldPassword.TabIndex = 8;
+            this.txtOldPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(809, 353);
+            this.txtEmail.Location = new System.Drawing.Point(809, 277);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtEmail.Multiline = true;
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(189, 22);
+            this.txtEmail.Size = new System.Drawing.Size(262, 45);
             this.txtEmail.TabIndex = 7;
+            this.txtEmail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(623, 493);
+            this.label5.Location = new System.Drawing.Point(623, 540);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(160, 23);
             this.label5.TabIndex = 5;
@@ -223,7 +234,7 @@ namespace Polycafe_GUI
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(623, 450);
+            this.label4.Location = new System.Drawing.Point(623, 456);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(118, 23);
             this.label4.TabIndex = 4;
@@ -233,7 +244,7 @@ namespace Polycafe_GUI
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(623, 401);
+            this.label3.Location = new System.Drawing.Point(623, 368);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(146, 23);
             this.label3.TabIndex = 3;
@@ -243,7 +254,7 @@ namespace Polycafe_GUI
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(623, 351);
+            this.label2.Location = new System.Drawing.Point(623, 287);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(146, 23);
             this.label2.TabIndex = 2;
@@ -252,10 +263,10 @@ namespace Polycafe_GUI
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(774, 290);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(782, 128);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(204, 38);
+            this.label1.Size = new System.Drawing.Size(228, 45);
             this.label1.TabIndex = 1;
             this.label1.Text = "Đổi mật khẩu";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -263,7 +274,7 @@ namespace Polycafe_GUI
             // pictureBox1
             // 
             this.pictureBox1.Image = global::Polycafe_GUI.Properties.Resources.poly;
-            this.pictureBox1.Location = new System.Drawing.Point(564, 233);
+            this.pictureBox1.Location = new System.Drawing.Point(497, 90);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(192, 106);
@@ -294,47 +305,53 @@ namespace Polycafe_GUI
             // pictureBox4
             // 
             this.pictureBox4.Image = global::Polycafe_GUI.Properties.Resources.lo;
-            this.pictureBox4.Location = new System.Drawing.Point(1144, 212);
+            this.pictureBox4.Location = new System.Drawing.Point(1093, 96);
             this.pictureBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(124, 119);
+            this.pictureBox4.Size = new System.Drawing.Size(168, 151);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 8;
             this.pictureBox4.TabStop = false;
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(922, 444);
+            this.textBox7.Location = new System.Drawing.Point(844, 494);
             this.textBox7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox7.Multiline = true;
             this.textBox7.Name = "textBox7";
             this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(199, 22);
+            this.textBox7.Size = new System.Drawing.Size(262, 45);
             this.textBox7.TabIndex = 7;
+            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(922, 394);
+            this.textBox6.Location = new System.Drawing.Point(844, 406);
             this.textBox6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox6.Multiline = true;
             this.textBox6.Name = "textBox6";
             this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(199, 22);
+            this.textBox6.Size = new System.Drawing.Size(262, 45);
             this.textBox6.TabIndex = 6;
+            this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(922, 344);
+            this.textBox5.Location = new System.Drawing.Point(844, 320);
             this.textBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(199, 22);
+            this.textBox5.Size = new System.Drawing.Size(262, 45);
             this.textBox5.TabIndex = 5;
+            this.textBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI Semibold", 10.8F, System.Drawing.FontStyle.Bold);
-            this.label10.Location = new System.Drawing.Point(758, 444);
+            this.label10.Location = new System.Drawing.Point(643, 503);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(67, 25);
             this.label10.TabIndex = 4;
@@ -344,7 +361,7 @@ namespace Polycafe_GUI
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI Semibold", 10.8F, System.Drawing.FontStyle.Bold);
-            this.label9.Location = new System.Drawing.Point(758, 396);
+            this.label9.Location = new System.Drawing.Point(643, 416);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(56, 25);
             this.label9.TabIndex = 3;
@@ -354,7 +371,7 @@ namespace Polycafe_GUI
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI Semibold", 10.8F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(758, 343);
+            this.label8.Location = new System.Drawing.Point(643, 328);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(144, 25);
             this.label8.TabIndex = 2;
@@ -364,7 +381,7 @@ namespace Polycafe_GUI
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Black", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(829, 276);
+            this.label7.Location = new System.Drawing.Point(747, 153);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(224, 41);
             this.label7.TabIndex = 1;
@@ -373,16 +390,17 @@ namespace Polycafe_GUI
             // pictureBox2
             // 
             this.pictureBox2.Image = global::Polycafe_GUI.Properties.Resources.poly;
-            this.pictureBox2.Location = new System.Drawing.Point(615, 232);
+            this.pictureBox2.Location = new System.Drawing.Point(441, 109);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(169, 85);
+            this.pictureBox2.Size = new System.Drawing.Size(221, 125);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
             // tabPage3
             // 
+            this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(160)))), ((int)(((byte)(130)))));
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage3.Name = "tabPage3";
@@ -390,10 +408,11 @@ namespace Polycafe_GUI
             this.tabPage3.Size = new System.Drawing.Size(1807, 918);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "HD Sử Dụng";
-            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
+            this.tabPage4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(160)))), ((int)(((byte)(130)))));
+            this.tabPage4.Controls.Add(this.richTextBox2);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage4.Name = "tabPage4";
@@ -401,7 +420,17 @@ namespace Polycafe_GUI
             this.tabPage4.Size = new System.Drawing.Size(1807, 918);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Giới Thiệu ";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(160)))), ((int)(((byte)(130)))));
+            this.richTextBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox2.Location = new System.Drawing.Point(554, 66);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(736, 687);
+            this.richTextBox2.TabIndex = 0;
+            this.richTextBox2.Text = "";
             // 
             // CaiDat
             // 
@@ -412,6 +441,7 @@ namespace Polycafe_GUI
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "CaiDat";
             this.Size = new System.Drawing.Size(1815, 947);
+            this.Load += new System.EventHandler(this.CaiDat_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -421,6 +451,7 @@ namespace Polycafe_GUI
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -430,10 +461,6 @@ namespace Polycafe_GUI
         private TabControl tabControl1;
         private TabPage tabPage1;
         private Button btnChangePassword;
-        private TextBox txtConfirmPassword;
-        private TextBox txtNewPassword;
-        private TextBox txtOldPassword;
-        private TextBox txtEmail;
         private Label label5;
         private Label label4;
         private Label label3;
@@ -456,5 +483,10 @@ namespace Polycafe_GUI
         private CheckBox chkShowConfirmPassword;
         private PictureBox pictureBox3;
         private PictureBox pictureBox4;
+        private TextBox txtConfirmPassword;
+        private TextBox txtNewPassword;
+        private TextBox txtOldPassword;
+        private TextBox txtEmail;
+        private RichTextBox richTextBox2;
     }
 }

@@ -7,7 +7,7 @@ namespace Polycafe_GUI
 {
     public partial class Welcome : Form
     {
-
+        private int dotCount = 0;
         public Welcome()
         {
             InitializeComponent();
@@ -15,7 +15,7 @@ namespace Polycafe_GUI
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 30;
             //Thực hiện thao tác load chờ 3 giây
-            Task.Delay(1500).ContinueWith(t =>
+            Task.Delay(3000).ContinueWith(t =>
             {
                 Invoke(new Action(() =>
                 {
@@ -27,7 +27,8 @@ namespace Polycafe_GUI
                     this.Hide(); // hoặc this.Close(); nếu không cần nữa
                 }));
             });
-
+            timer1.Interval = 500;
+            timer1.Start();
         }
 
         private void progressBar1_Click(object sender, EventArgs e)
@@ -47,6 +48,12 @@ namespace Polycafe_GUI
         private void Welcome_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            dotCount = (dotCount + 1) % 4; // 0 -> 3
+            label1.Text = "Welcome To PolyCafe" + new string('.', dotCount);
         }
     }
 }

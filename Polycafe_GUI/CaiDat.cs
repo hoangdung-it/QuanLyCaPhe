@@ -10,24 +10,53 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using Polycafe_BUS;
 using Polycafe_DTO;
-
+using System.Drawing.Drawing2D;
+using System.Diagnostics;
 namespace Polycafe_GUI
 {
+
     public partial class CaiDat : UserControl
     {
+
         private string connectionString = "Data Source=.;Initial Catalog=QLPolycafe;Integrated Security=True;";
         private NhanVienBLL nhanVienBLL;
         private HoSo_BUS bus = new HoSo_BUS(); 
         private string userEmail;
 
-        public CaiDat()
+        public CaiDat(string email)
         {
             InitializeComponent();
             nhanVienBLL = new NhanVienBLL(connectionString);
+            this.userEmail = email;
             LoadUser();
+            LoadGioiThieuPolyCafe(); // Gọi phương thức này khi Form được khởi tạo
+
         }
+        private void LoadGioiThieuPolyCafe()
+        {
+           
+            string gioiThieu = "                  ----------------------------------------------------------------\r\n" +
+                               "                            Giới thiệu Hệ thống quản lý PolyCafe\r\n" +
+                               "                  ----------------------------------------------------------------\r\n\r\n" +
+                               "Chào mừng bạn đến với Hệ thống quản lý PolyCafe – giải pháp phần mềm toàn diện được phát triển bởi Nhóm 2.\r\n\r\n" +
+                               "Các thành viên:\r\n" +
+                               "        * Nguyễn Huỳnh Kim Ngân\r\n" +
+                               "        * Trịnh Minh Uyên\r\n" +
+                               "        * Võ Phan Hoàng Dung\r\n\r\n" +
+                               "PolyCafe được thiết kế đặc biệt nhằm tối ưu hóa và đơn giản hóa mọi quy trình vận hành trong các quán cà phê, từ quản lý đơn hàng, kho hàng đến chăm sóc khách hàng. Với giao diện trực quan và các tính năng mạnh mẽ, hệ thống hứa hẹn sẽ mang lại hiệu quả vượt trội, giúp chủ quán dễ dàng kiểm soát và phát triển công việc kinh doanh của mình.";
+
+          
+            this.richTextBox2.Text = gioiThieu;
+
+            this.richTextBox2.ReadOnly = true;
+
+           
+        }
+       
+       
         private void LoadUser()
         {
+
             DataTable userInfo = bus.Getuser(userEmail);
             if (userInfo.Rows.Count > 0)
             {
@@ -35,7 +64,12 @@ namespace Polycafe_GUI
                 textBox6.Text = userInfo.Rows[0]["Email"].ToString();
                 textBox7.Text = Convert.ToBoolean(userInfo.Rows[0]["VaiTro"]) ? "Quản Lý" : "Nhân viên Bán Hàng ";
             }
+            else
+            {
+                MessageBox.Show("Không tìm thấy người dùng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
+
         private void chkShowOldPassword_CheckedChanged(object sender, EventArgs e)
         {
             txtOldPassword.PasswordChar = chkShowOldPassword.Checked ? '\0' : '*';
@@ -131,7 +165,20 @@ namespace Polycafe_GUI
         {
 
         }
+
+        private void CaiDat_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+           
+        }
     }
+    
 }
 
 

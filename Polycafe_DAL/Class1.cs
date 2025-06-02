@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Reflection;
 using Polycafe_DTO;
 using System.Linq;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using DocumentFormat.OpenXml.Math;
 namespace Polycafe_DAL
 {
     public class DBUtil
@@ -58,7 +60,7 @@ namespace Polycafe_DAL
             {
                 throw;
             }
-            
+
         }
 
         public static Object Value(string sql, List<object> args, CommandType cmdType = CommandType.Text)
@@ -1079,7 +1081,7 @@ namespace Polycafe_DAL
                         cmd.ExecuteNonQuery();
                     }
 
-                   
+
 
                     transaction.Commit();
                 }
@@ -1200,7 +1202,7 @@ namespace Polycafe_DAL
                                 MaThe = reader.GetString(reader.GetOrdinal("MaThe")),
                                 ChuSoHuu = reader["ChuSoHuu"].ToString(),
                                 TrangThai = reader.GetBoolean(reader.GetOrdinal("TrangThai")),
-                               
+
                             };
                             list.Add(item);
                         }
@@ -1210,7 +1212,7 @@ namespace Polycafe_DAL
             return list;
         }
 
-       
+
     }
     public class ThongkeNVDAL
     {
@@ -1223,21 +1225,60 @@ namespace Polycafe_DAL
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        conn.Open();
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(dt);
-                    }
+                    conn.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Lỗi khi lấy dữ liệu nhân viên từ CSDL." + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Lỗi khi lấy dữ liệu nhân viên từ CSDL: " + ex.Message);
             }
             return dt;
         }
+
+        public DataTable GetTK(string MaNV, DateTime startDate, DateTime endDate)
+        {
+            DataTable dt = new DataTable();
+            string query = @"
+            SELECT NV.MaNhanVien,
+                   NV.HoTen,
+                   PB.NgayTao,
+                   PB.TrangThai,
+                   COUNT(ChiTietPhieu.SoLuong) AS [So Luong Phieu],
+                   SUM(ChiTietPhieu.DonGia * ChiTietPhieu.SoLuong) AS [Tong Tien]
+            FROM NhanVien NV
+            INNER JOIN PhieuBanHang PB ON PB.MaNhanVien = NV.MaNhanVien
+            INNER JOIN ChiTietPhieu ON ChiTietPhieu.MaPhieu = PB.MaPhieu
+            WHERE (@MaNV IS NULL OR NV.MaNhanVien = @MaNV)
+              AND PB.NgayTao BETWEEN @TuNgay AND @DenNgay
+            GROUP BY NV.MaNhanVien, NV.HoTen, PB.TrangThai, PB.NgayTao";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaNV", string.IsNullOrEmpty(MaNV) ? (object)DBNull.Value : MaNV);
+                    cmd.Parameters.AddWithValue("@TuNgay", startDate);
+                    cmd.Parameters.AddWithValue("@DenNgay", endDate);
+
+                    conn.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Lỗi khi lấy dữ liệu thống kê nhân viên: " + ex.Message);
+                throw new Exception("Lỗi khi lấy dữ liệu thống kê nhân viên.", ex);
+            }
+
+            return dt;
+        }
+
         public bool GetVaiTroByEmail(string email)
         {
             string query = "SELECT VaiTro FROM NhanVien WHERE Email = @Email";
@@ -1254,58 +1295,36 @@ namespace Polycafe_DAL
                 }
             }
 
-            return false; // nếu không tìm thấy hoặc lỗi thì coi như không có quyền
+            return false;
         }
-        public DataTable GetTK(string MaNV, DateTime startDate, DateTime endDate)
+
+        public DataTable GetThongKeDoanhThu(string maNV, DateTime tuNgay, DateTime denNgay)
         {
             DataTable dt = new DataTable();
-            string query = @"
-                SELECT NV.MaNhanVien,
-                    NV.HoTen,
-                    PB.NgayTao,
-                    PB.TrangThai,
-                    Count(ChiTietPhieu.SoLuong) as [So Luong Phieu],
-                    Sum(ChiTietPhieu.DonGia * ChiTietPhieu.SoLuong) as [Tong Tien]
-                FROM NhanVien NV
-                Inner join PhieuBanHang PB on PB.MaNhanVien = NV.MaNhanVien
-                Inner join ChiTietPhieu on ChiTietPhieu.MaPhieu = PB.MaPhieu
-                WHERE (@MaNV IS NULL OR NV.MaNhanVien = @MaNV)
-                AND PB.NgayTao BETWEEN @TuNgay AND @DenNgay
-                group by NV.MaNhanVien, 
-                NV.HoTen,
-                PB.TrangThai,
-                PB.NgayTao";
+            string procedureName = "TKDoanhThuTheoNhanVien";
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(procedureName, conn))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        if (string.IsNullOrEmpty(MaNV))
-                        {
-                            cmd.Parameters.AddWithValue("@MaNV", DBNull.Value);
-                        }
-                        else
-                        {
-                            cmd.Parameters.AddWithValue("@MaNV", MaNV);
-                        }
-                        cmd.Parameters.AddWithValue("@TuNgay", startDate);
-                        cmd.Parameters.AddWithValue("@DenNgay", endDate);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@1", string.IsNullOrEmpty(maNV) ? (object)DBNull.Value : maNV);
+                    cmd.Parameters.AddWithValue("@2", tuNgay.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@3", denNgay.ToString("yyyy-MM-dd"));
 
-                        conn.Open();
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(dt);
-                    }
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Lỗi khi lấy dữ liệu thống kê từ CSDL." + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Lỗi khi lấy dữ liệu thống kê từ CSDL: " + ex.Message);
+                throw new Exception("Lỗi khi lấy dữ liệu thống kê.", ex);
             }
+
             return dt;
-
         }
-
 
         public List<string> LoadMaNV()
         {
@@ -1322,22 +1341,21 @@ namespace Polycafe_DAL
                     {
                         maNV.Add(reader["MaNhanVien"].ToString());
                     }
-                    reader.Close(); // Đóng reader
-                    return maNV;
+                    reader.Close();
                 }
                 catch (SqlException ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Lỗi tải Mã nhân viên : {ex.Message}", "Lỗi SQL");
-                    return null; // Trả về null khi có lỗi
+                    System.Diagnostics.Debug.WriteLine($"Lỗi SQL: {ex.Message}");
+                    return null;
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Lỗi không xác định khi tải Mã nhân viên: {ex.Message}", "Lỗi");
+                    System.Diagnostics.Debug.WriteLine($"Lỗi không xác định: {ex.Message}");
                     return null;
                 }
             }
+            return maNV;
         }
-
 
         public List<SanPham_DTO> LoadMaSP()
         {
@@ -1356,32 +1374,33 @@ namespace Polycafe_DAL
                         TenSP = reader["TenSanPham"].ToString()
                     });
                 }
+                reader.Close();
             }
             return list;
         }
-
 
         public DataTable GetTKSP(string MaSP, DateTime startDate, DateTime endDate)
         {
             DataTable dt = new DataTable();
             string query = @"
-                SELECT SP.MaSanPham,
-                       SP.TenSanPham,
-                       PB.NgayTao,
-                       SUM(CTP.SoLuong) AS SoLuongBan,
-                       SUM(CTP.SoLuong * CTP.DonGia) AS TongTien
-                FROM SanPham SP
-                INNER JOIN ChiTietPhieu CTP ON SP.MaSanPham = CTP.MaSanPham
-                INNER JOIN PhieuBanHang PB ON PB.MaPhieu = CTP.MaPhieu
-                WHERE (@MaSP IS NULL OR SP.MaSanPham = @MaSP)
-                  AND PB.NgayTao BETWEEN @TuNgay AND @DenNgay
-                GROUP BY SP.MaSanPham, SP.TenSanPham, PB.NgayTao";
+            SELECT SP.MaSanPham,
+                   SP.TenSanPham,
+                   PB.NgayTao,
+                   SUM(CTP.SoLuong) AS SoLuongBan,
+                   SUM(CTP.SoLuong * CTP.DonGia) AS TongTien
+            FROM SanPham SP
+            INNER JOIN ChiTietPhieu CTP ON SP.MaSanPham = CTP.MaSanPham
+            INNER JOIN PhieuBanHang PB ON PB.MaPhieu = CTP.MaPhieu
+            WHERE (@MaSP IS NULL OR SP.MaSanPham = @MaSP)
+              AND PB.NgayTao BETWEEN @TuNgay AND @DenNgay
+            GROUP BY SP.MaSanPham, SP.TenSanPham, PB.NgayTao";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaSP", string.IsNullOrEmpty(MaSP) ? DBNull.Value : (object)MaSP);
+                    cmd.Parameters.AddWithValue("@MaSP", string.IsNullOrEmpty(MaSP) ? (object)DBNull.Value : MaSP);
                     cmd.Parameters.AddWithValue("@TuNgay", startDate);
                     cmd.Parameters.AddWithValue("@DenNgay", endDate);
 
@@ -1390,96 +1409,120 @@ namespace Polycafe_DAL
                     da.Fill(dt);
                 }
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Lỗi khi lấy thống kê sản phẩm: " + ex.Message);
+                throw new Exception("Lỗi khi lấy thống kê sản phẩm.", ex);
+            }
 
             return dt;
         }
 
-        public DataTable LayThongKe(string loaiThongKe)
-        {
-            string query = BuildQuery(loaiThongKe);
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-            {
-                DataTable dt = new DataTable();
-                conn.Open();
-                adapter.Fill(dt);
-                return dt;
-            }
-        }
-
-        private string BuildQuery(string loai)
-        {
-            switch (loai)
-            {
-                case "Theo Tuần":
-                    return @"
-                        SELECT MaNhanVien, DATEPART(YEAR, NgayTao) AS Nam, DATEPART(WEEK, NgayTao) AS Ky,
-                               COUNT(DISTINCT MaPhieu) AS SoLuongPhieu
-                        FROM PhieuBanHang
-                        WHERE TrangThai = 1
-                        GROUP BY MaNhanVien, DATEPART(YEAR, NgayTao), DATEPART(WEEK, NgayTao)
-                        ORDER BY MaNhanVien, Nam, Ky";
-                case "Theo Tháng":
-                    return @"
-                        SELECT MaNhanVien, DATEPART(YEAR, NgayTao) AS Nam, DATEPART(MONTH, NgayTao) AS Ky,
-                               COUNT(DISTINCT MaPhieu) AS SoLuongPhieu
-                        FROM PhieuBanHang
-                        WHERE TrangThai = 1
-                        GROUP BY MaNhanVien, DATEPART(YEAR, NgayTao), DATEPART(MONTH, NgayTao)
-                        ORDER BY MaNhanVien, Nam, Ky";
-                case "Theo Quý":
-                    return @"
-                        SELECT MaNhanVien, DATEPART(YEAR, NgayTao) AS Nam, DATEPART(QUARTER, NgayTao) AS Ky,
-                               COUNT(DISTINCT MaPhieu) AS SoLuongPhieu
-                        FROM PhieuBanHang
-                        WHERE TrangThai = 1
-                        GROUP BY MaNhanVien, DATEPART(YEAR, NgayTao), DATEPART(QUARTER, NgayTao)
-                        ORDER BY MaNhanVien, Nam, Ky";
-                default:
-                    throw new ArgumentException("Loại thống kê không hợp lệ.");
-            }
-        }
-
-        public DataTable LayThongTinThongKeSP(string loaiThongKe)
+        public DataTable GetThongKeDoanhThuSP(string maSP, DateTime tuNgay, DateTime denNgay)
         {
             DataTable dt = new DataTable();
+            string procedureName = "TKDoanhThuTheoLoaiSP";
 
-            string kySelect = "", groupBy = "";
-            switch (loaiThongKe)
+            try
             {
-                case "Theo Tháng":
-                    kySelect = "MONTH(PB.NgayTao) AS Ky";
-                    groupBy = "YEAR(PB.NgayTao), MONTH(PB.NgayTao), SP.MaSanPham";
-                    break;
-                case "Theo Tuần":
-                    kySelect = "DATEPART(WEEK, PB.NgayTao) AS Ky";
-                    groupBy = "YEAR(PB.NgayTao), DATEPART(WEEK, PB.NgayTao), SP.MaSanPham";
-                    break;
-                case "Theo Quý":
-                    kySelect = "DATEPART(QUARTER, PB.NgayTao) AS Ky";
-                    groupBy = "YEAR(PB.NgayTao), DATEPART(QUARTER, PB.NgayTao), SP.MaSanPham";
-                    break;
-                default:
-                    return dt;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(procedureName, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@1", string.IsNullOrEmpty(maSP) ? (object)DBNull.Value : maSP);
+                    cmd.Parameters.AddWithValue("@2", tuNgay);
+                    cmd.Parameters.AddWithValue("@3", denNgay);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy dữ liệu thống kê: " + ex.Message);
             }
 
-            string query = $@"
-        SELECT SP.MaSanPham,
-               SP.TenSanPham,
-               YEAR(PB.NgayTao) AS Nam,
-               {kySelect},
-               SUM(CTP.SoLuong) AS SoLuongBan
-        FROM SanPham SP
-        INNER JOIN ChiTietPhieu CTP ON SP.MaSanPham = CTP.MaSanPham
-        INNER JOIN PhieuBanHang PB ON PB.MaPhieu = CTP.MaPhieu
-        GROUP BY {groupBy}, SP.TenSanPham";
+            return dt;
+        }
+
+        public DataTable GetStatisticalData(string type)
+        {
+            DataTable dt = new DataTable();
+            string query = "";
+
+            switch (type.ToLower())
+            {
+                case "monthly":
+                    query = @"
+                    SELECT pbh.MaNhanVien,
+                           DATEPART(YEAR, pbh.NgayTao) AS Nam,
+                           DATEPART(MONTH, pbh.NgayTao) AS Ky,
+                           SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
+                    FROM PhieuBanHang AS pbh
+                    JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
+                    WHERE pbh.TrangThai = 1
+                    GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(MONTH, pbh.NgayTao)
+                    ORDER BY pbh.MaNhanVien, Nam, Ky;";
+                    break;
+                case "weekly":
+                    query = @"
+                    SELECT pbh.MaNhanVien,
+                           DATEPART(YEAR, pbh.NgayTao) AS Nam,
+                           DATEPART(WEEK, pbh.NgayTao) AS Ky,
+                           SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
+                    FROM PhieuBanHang AS pbh
+                    JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
+                    WHERE pbh.TrangThai = 1
+                    GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(WEEK, pbh.NgayTao)
+                    ORDER BY pbh.MaNhanVien, Nam, Ky;";
+                    break;
+                case "quarterly":
+                    query = @"
+                    SELECT pbh.MaNhanVien,
+                           DATEPART(YEAR, pbh.NgayTao) AS Nam,
+                           DATEPART(QUARTER, pbh.NgayTao) AS Ky,
+                           SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
+                    FROM PhieuBanHang AS pbh
+                    JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
+                    WHERE pbh.TrangThai = 1
+                    GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(QUARTER, pbh.NgayTao)
+                    ORDER BY pbh.MaNhanVien, Nam, Ky;";
+                    break;
+                default:
+                    throw new ArgumentException("Unsupported statistic type: " + type);
+            }
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi khi lấy dữ liệu thống kê dạng " + type + ": " + ex.Message);
+                throw;
+            }
+
+            return dt;
+        }
+
+        public DataTable LayTop5SanPhamBanChay(DateTime tuNgay, DateTime denNgay)
+        {
+            DataTable dt = new DataTable();
+            string procedureName = "sp_Top5SanPhamBanChay";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlCommand cmd = new SqlCommand(procedureName, conn))
             {
-                conn.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@TuNgay", tuNgay);
+                cmd.Parameters.AddWithValue("@DenNgay", denNgay);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
@@ -1487,7 +1530,49 @@ namespace Polycafe_DAL
             return dt;
         }
 
+        public DataTable LayDoanhThuTheoThang(DateTime tuNgay, DateTime denNgay)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("sp_ThongKeTongDoanhThu", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@TuNgay", tuNgay.Date);
+                cmd.Parameters.AddWithValue("@DenNgay", denNgay.Date);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Lỗi khi lấy doanh thu theo tháng.", ex);
+                }
+            }
+            return dt;
+        }
+
+        public DataTable ThongKeSoPhieuTheoSanPham(string maLoai, DateTime tuNgay, DateTime denNgay)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("TKSoPhieuTheoSanPham", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@MaLoai", string.IsNullOrEmpty(maLoai) ? (object)DBNull.Value : maLoai);
+                cmd.Parameters.AddWithValue("@TuNgay", tuNgay);
+                cmd.Parameters.AddWithValue("@DenNgay", denNgay);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+
+            return dt;
+        }
     }
+
     public class DBConnections
     {
         // Chuỗi kết nối đến cơ sở dữ liệu PolyCafe
@@ -1538,7 +1623,7 @@ namespace Polycafe_DAL
     }
     public class EmployeeDAL
     {
-        private static string connectionString = "Data Source=SD20302\\ADMINCUTE;Initial Catalog=PolyCafe;Integrated Security=True;";
+        private static string connectionString = "Data Source=.;Initial Catalog=PolyCafe;Integrated Security=True;";
         // Lấy tất cả nhân viên
         public List<EmployeeDTO> GetAllEmployees()
         {
@@ -1715,16 +1800,22 @@ namespace Polycafe_DAL
         private string connString = "Data Source=.;Initial Catalog=QLPolycafe;Integrated Security=True;";
         public DataTable GetUser(string email)
         {
-            DataTable dt = new DataTable();
+            DataTable userInfo = new DataTable();
             using (SqlConnection connection = new SqlConnection(connString))
             {
-                string query = "SELECT HoTen, Email, VaiTro FROM NhanVien ";
+                string query = "SELECT HoTen, Email, VaiTro FROM NhanVien WHERE Email = @Email";
                 SqlCommand command = new SqlCommand(query, connection);
+
+                // ✅ THÊM DÒNG NÀY:
+                command.Parameters.AddWithValue("@Email", email);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dt);
+                adapter.Fill(userInfo);
             }
-            return dt;
+            return userInfo;
         }
+
+
     }
 
 }

@@ -100,36 +100,32 @@ namespace Polycafe_BUS
     }
     public class ThongkeNVBUS
     {
+        private ThongkeNVDAL dal = new ThongkeNVDAL();
+
         public bool GetVaiTroByEmail(string email)
         {
             return dal.GetVaiTroByEmail(email);
         }
-        private ThongkeNVDAL dal = new ThongkeNVDAL();
+
         public DataTable getEmp()
         {
             return dal.GetNV();
         }
+
         public DataTable getTK(string MaNV, DateTime startDate, DateTime endDate)
         {
             return dal.GetTK(MaNV, startDate, endDate);
+        }
+
+        public DataTable GetThongKe(string MaNV, DateTime startDate, DateTime endDate)
+        {
+            return dal.GetThongKeDoanhThu(MaNV, startDate, endDate);
         }
 
         public List<string> LoadmaNV()
         {
             return dal.LoadMaNV();
         }
-
-
-        public DataTable LayThongTinThongKe(string loaiThongKe)
-        {
-            return dal.LayThongKe(loaiThongKe);
-        }
-
-        public DataTable LayThongTinThongKeSP(string loaiThongKe)
-        {
-            return dal.LayThongTinThongKeSP(loaiThongKe);
-        }
-
 
         public DataTable getTKSP(string MaSP, DateTime startDate, DateTime endDate)
         {
@@ -141,8 +137,49 @@ namespace Polycafe_BUS
             return dal.LoadMaSP();
         }
 
+        public DataTable LayThongTinThongKe(string type)
+        {
+            string dalType = "";
+            switch (type)
+            {
+                case "Theo Tháng":
+                    dalType = "monthly";
+                    break;
+                case "Theo Tuần":
+                    dalType = "weekly";
+                    break;
+                case "Theo Quý":
+                    dalType = "quarterly";
+                    break;
+                default:
+                    dalType = type.ToLower();
+                    break;
+            }
 
+            return dal.GetStatisticalData(dalType);
+        }
+
+        public DataTable LayTop5SanPhamBanChay(DateTime tuNgay, DateTime denNgay)
+        {
+            return dal.LayTop5SanPhamBanChay(tuNgay, denNgay);
+        }
+
+        public DataTable LayDoanhThuTheoThang(DateTime tuNgay, DateTime denNgay)
+        {
+            return dal.LayDoanhThuTheoThang(tuNgay, denNgay);
+        }
+
+        public DataTable Get(string maSP, DateTime tuNgay, DateTime denNgay)
+        {
+            return dal.GetThongKeDoanhThuSP(maSP, tuNgay, denNgay);
+        }
+
+        public DataTable LayThongKeSoPhieuTheoSanPham(string maLoai, DateTime tuNgay, DateTime denNgay)
+        {
+            return dal.ThongKeSoPhieuTheoSanPham(maLoai, tuNgay, denNgay);
+        }
     }
+
     public class SanPhamBUS
     {
         private SanPhamDAL dal = new SanPhamDAL();

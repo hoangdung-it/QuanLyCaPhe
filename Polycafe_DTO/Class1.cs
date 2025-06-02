@@ -35,8 +35,8 @@ namespace Polycafe_DTO
         public int SoLuongPhieu { get; set; }
         public DateTime NgayLapPhieu { get; set; }
         public string TrangThai { get; set; }
+        public int SoLy { get; set; }
     }
-
     public class NhanVien_DTO
     {
         public string MaNV { get; set; }
@@ -165,6 +165,14 @@ namespace Polycafe_DTO
         public string HoTen { get; set; }
         public string Email { get; set; }
         public bool VaiTro { get; set; }
+        public HoSo_DTO() { }
+
+        public HoSo_DTO(string userName, string email, bool role)
+        {
+            HoTen = userName;
+            Email = email;
+            VaiTro = role;
+        }
 
     }
 }
