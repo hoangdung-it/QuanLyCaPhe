@@ -25,7 +25,10 @@ namespace Polycafe_BUS
         {
             return dal.GetVaiTro(username);
         }
-
+        public string LayTenNhanVien(string email)
+        {
+            return dal.LayTenTheoEmail(email);
+        }
     }
     public class NhanVienBLL
     {
@@ -137,7 +140,7 @@ namespace Polycafe_BUS
             return dal.LoadMaSP();
         }
 
-        public DataTable LayThongTinThongKe(string type)
+        public DataTable LayThongTinThongKe(string type, DateTime? tuNgay = null, DateTime? denNgay = null)
         {
             string dalType = "";
             switch (type)
@@ -156,7 +159,7 @@ namespace Polycafe_BUS
                     break;
             }
 
-            return dal.GetStatisticalData(dalType);
+            return dal.GetStatisticalData(dalType, tuNgay, denNgay);
         }
 
         public DataTable LayTop5SanPhamBanChay(DateTime tuNgay, DateTime denNgay)

@@ -12,6 +12,8 @@ using Polycafe_BUS;
 using Polycafe_DTO;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 namespace Polycafe_GUI
 {
 
@@ -32,28 +34,36 @@ namespace Polycafe_GUI
             LoadGioiThieuPolyCafe(); // Gọi phương thức này khi Form được khởi tạo
 
         }
+        
         private void LoadGioiThieuPolyCafe()
         {
-           
-            string gioiThieu = "                  ----------------------------------------------------------------\r\n" +
-                               "                            Giới thiệu Hệ thống quản lý PolyCafe\r\n" +
-                               "                  ----------------------------------------------------------------\r\n\r\n" +
-                               "Chào mừng bạn đến với Hệ thống quản lý PolyCafe – giải pháp phần mềm toàn diện được phát triển bởi Nhóm 2.\r\n\r\n" +
-                               "Các thành viên:\r\n" +
+
+            string gioiThieu = "\r\n\r\n" +
+                               "\r\n\r\n" +
+                               "\r\n" +
+                               "    Chào mừng bạn đến với Hệ thống quản lý PolyCafe \r\n\r\n" +
+                               "    Giải pháp phần mềm toàn diện được phát triển bởi Nhóm 2.\r\n\r\n" +
+                               "    Các thành viên:\r\n" +
                                "        * Nguyễn Huỳnh Kim Ngân\r\n" +
                                "        * Trịnh Minh Uyên\r\n" +
                                "        * Võ Phan Hoàng Dung\r\n\r\n" +
-                               "PolyCafe được thiết kế đặc biệt nhằm tối ưu hóa và đơn giản hóa mọi quy trình vận hành trong các quán cà phê, từ quản lý đơn hàng, kho hàng đến chăm sóc khách hàng. Với giao diện trực quan và các tính năng mạnh mẽ, hệ thống hứa hẹn sẽ mang lại hiệu quả vượt trội, giúp chủ quán dễ dàng kiểm soát và phát triển công việc kinh doanh của mình.";
+                               "    PolyCafe được thiết kế đặc biệt nhằm tối ưu hóa và đơn giản hóa mọi\r\n " +
+                               "   quy trình vận hành trong các quán cà phê, từ quản lý đơn hàng,\r\n" +
+                               "    kho hàng đến chăm sóc khách hàng. Với giao diện trực quan và các\r\n " +
+                               "   tính năng mạnh mẽ, hệ thống hứa hẹn sẽ mang lại hiệu quả vượt trội,\r\n " +
+                               "   giúp chủ quán dễ dàng kiểm soát và phát triển công việc kinh doanh\r\n " +
+                               "   của mình.";
 
-          
-            this.richTextBox2.Text = gioiThieu;
 
-            this.richTextBox2.ReadOnly = true;
 
-           
+            label11.Text = gioiThieu;
+            label11.AutoSize = true;
+            label11.Padding = new Padding(10);
+            label11.MaximumSize = new Size(this.ClientSize.Width - 40, 0); // Gò chiều rộng để tự xuống dòng
+
+
         }
-       
-       
+
         private void LoadUser()
         {
 
@@ -176,6 +186,11 @@ namespace Polycafe_GUI
         {
            
            
+        }
+
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
     

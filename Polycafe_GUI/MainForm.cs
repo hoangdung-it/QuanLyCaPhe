@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Polycafe_GUI
 {
@@ -15,13 +16,15 @@ namespace Polycafe_GUI
         private string currentVaiTro; // "1" cho Admin, "0" cho nhân viên
         // Thêm các using cần thiết cho các UserControl
         private string emailDangNhap;
-        public MainForm(string vaiTro, string email)
+        private string hoTen;
+        public MainForm(string vaiTro, string emaildn, string tenNhanVien)
         {
             InitializeComponent();
             SetupSideMenu();
             currentVaiTro = vaiTro; // lấy từ kết quả đăng nhập 
-            this.emailDangNhap = email;
-            SetupSideMenu();
+            this.emailDangNhap = emaildn;
+            this.hoTen = tenNhanVien;
+            label2.Text =  tenNhanVien ;
         }
 
         private void MainForm_Load(object sender, EventArgs e)

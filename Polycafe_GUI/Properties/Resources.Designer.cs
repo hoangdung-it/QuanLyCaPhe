@@ -133,6 +133,16 @@ namespace Polycafe_GUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Coffee_Shop_Logo {
+            get {
+                object obj = ResourceManager.GetObject("Coffee Shop Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap delete {
             get {
                 object obj = ResourceManager.GetObject("delete", resourceCulture);
@@ -223,6 +233,66 @@ namespace Polycafe_GUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_coffee_shop_64 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-coffee-shop-64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_coffee_shop_64_resized_24x24 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-coffee-shop-64_resized_24x24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_coffeeshop_100 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-coffeeshop-100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_coffeeshop_32 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-coffeeshop-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_coffeeshop_96 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-coffeeshop-96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_male_user_96 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-male-user-96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_password_24__1_ {
             get {
                 object obj = ResourceManager.GetObject("icons8-password-24 (1)", resourceCulture);
@@ -296,6 +366,16 @@ namespace Polycafe_GUI.Properties {
         internal static System.Drawing.Bitmap pen {
             get {
                 object obj = ResourceManager.GetObject("pen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pngtree_coffee_beans_cartoon_background_picture_image_2393962 {
+            get {
+                object obj = ResourceManager.GetObject("pngtree-coffee-beans-cartoon-background-picture-image_2393962", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

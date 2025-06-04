@@ -192,6 +192,7 @@ namespace Polycafe_GUI
             {
                 MessageBox.Show("Đã xảy ra lỗi khi thống kê: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            LoadChartTheoTuan();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -249,7 +250,17 @@ namespace Polycafe_GUI
 
         private void LoadChartTheoTuan()
         {
-            DataTable dt = bus.LayThongTinThongKe("Theo Tuần");
+
+            DateTime tuNgay = dateTimePicker1.Value.Date;
+            DateTime denNgay = dateTimePicker2.Value.Date;
+
+            if (tuNgay > denNgay)
+            {
+                MessageBox.Show("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.", "Lỗi chọn ngày", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DataTable dt = bus.LayThongTinThongKe("Theo Tuần", tuNgay, denNgay);
 
             if (!dt.Columns.Contains("TongDoanhThu") || !dt.Columns.Contains("Ky") || !dt.Columns.Contains("Nam"))
             {
@@ -283,7 +294,7 @@ namespace Polycafe_GUI
             area.BorderWidth = 1;
             area.BorderColor = Color.LightGray;
 
-            area.AxisY.Title = "Tuần";
+            area.AxisY.Title = "Tổng doanh thu (VNĐ)";
             area.AxisY.IsReversed = false;
             area.AxisY.Interval = 1;
             area.AxisY.MajorGrid.Enabled = false;
@@ -291,7 +302,7 @@ namespace Polycafe_GUI
             area.AxisY.LabelStyle.IsStaggered = false;
             area.AxisY.MajorTickMark.Enabled = false;
 
-            area.AxisX.Title = "Tổng doanh thu (VNĐ)";
+            area.AxisX.Title = "Tuần";
             area.AxisX.Minimum = 0;
             area.AxisX.IsStartedFromZero = true;
             area.AxisX.MajorGrid.Enabled = true;
@@ -300,23 +311,28 @@ namespace Polycafe_GUI
             area.AxisX.LabelStyle.Font = new Font("Arial", 9);
 
             var weeklyTotalRevenue = dt.AsEnumerable()
-                .GroupBy(r => new { Ky = r.Field<int>("Ky"), Nam = r.Field<int>("Nam") })
-                .Select(g => new
-                {
-                    Ky = g.Key.Ky,
-                    Nam = g.Key.Nam,
-                    TuanLabel = $"Tuần {g.Key.Ky} ({g.Key.Nam})",
-                    TotalRevenue = g.Sum(r => Convert.ToDouble(r.Field<object>("TongDoanhThu")))
-                })
-                .OrderBy(x => x.Nam)
-                .ThenBy(x => x.Ky)
-                .ToList();
+     .GroupBy(r => new { Ky = r.Field<int>("Ky"), Nam = r.Field<int>("Nam") })
+     .Select(g =>
+     {
+         // Ước lượng ngày đại diện của tuần
+         DateTime firstDayOfYear = new DateTime(g.Key.Nam, 1, 1);
+         DateTime approxDate = firstDayOfYear.AddDays((g.Key.Ky - 1) * 7);
 
-            if (!weeklyTotalRevenue.Any())
-            {
-                MessageBox.Show("Không có dữ liệu tổng doanh thu theo tuần.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+         // Lấy tháng từ ngày đó
+         string thang = approxDate.ToString("MM");
+
+         return new
+         {
+             Ky = g.Key.Ky,
+             Nam = g.Key.Nam,
+             TuanLabel = $"Tuần {g.Key.Ky} (Tháng {thang})",
+             TotalRevenue = g.Sum(r => Convert.ToDouble(r.Field<object>("TongDoanhThu")))
+         };
+     })
+     .OrderBy(x => x.Nam)
+     .ThenBy(x => x.Ky)
+     .ToList();
+
 
             Series series = new Series("Tổng doanh thu theo tuần")
             {
@@ -797,26 +813,7 @@ namespace Polycafe_GUI
         }
 
         // Empty event handlers for UI controls
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        private void groupBox1_Enter(object sender, EventArgs e) { }
-        private void groupBox3_Enter(object sender, EventArgs e) { }
-        private void label3_Click(object sender, EventArgs e) { }
-        private void dateTimePicker2_ValueChanged(object sender, EventArgs e) { }
-        private void chart1_Click(object sender, EventArgs e) { }
-        private void chart1_Click_1(object sender, EventArgs e) { }
-        private void chart3_Click(object sender, EventArgs e) { }
-        private void chart4_Click(object sender, EventArgs e) { }
-        private void dateTimePicker4_ValueChanged(object sender, EventArgs e) { }
-        private void tabPage1_Click(object sender, EventArgs e) { }
-        private void tabPage2_Click(object sender, EventArgs e) { }
-        private void chart2_Click(object sender, EventArgs e) { }
-        private void groupBox8_Enter(object sender, EventArgs e) { }
-        private void chart5_Click(object sender, EventArgs e) { }
-        private void groupBox9_Enter(object sender, EventArgs e) { }
-        private void chart6_Click(object sender, EventArgs e) { }
-        private void groupBox10_Enter(object sender, EventArgs e) { }
-
+        
         private void button4_Click_1(object sender, EventArgs e)
         {
             try
@@ -854,6 +851,16 @@ namespace Polycafe_GUI
             {
                 MessageBox.Show("Đã xảy ra lỗi khi thống kê: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            LoadChartTheoTuan();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            LoadChartTheoTuan();
         }
     }
 }

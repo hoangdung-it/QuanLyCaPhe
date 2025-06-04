@@ -40,7 +40,7 @@ namespace Polycafe_GUI
             timer1.Interval = 200; // 200ms mỗi lần chạy
             timer1.Start();
         }
-
+       
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.Enter)
@@ -88,30 +88,16 @@ namespace Polycafe_GUI
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.None;
-
-            MakePanelRounded(panel1);
-
-            // Các phần bo tròn khác giữ nguyên
-
-            MakePanelRounded(panel2);
-
-
-
+           
             // Bo góc cho nút
             RoundControl(btnExit, 20);
 
-            RoundControl(panel1, 7); // giả sử bạn đặt TextBox vào panelUser
-            RoundControl(panel2, 7);
 
             user.MouseEnter += user_MouseEnter;
             user.MouseLeave += user_MouseLeave;
             pass.MouseEnter += pass_MouseEnter;
             pass.MouseLeave += pass_MouseLeave;
 
-            panel1.Paint += panel1_Paint;
-            panel2.Paint += panel2_Paint;
-            panel2.Paint += panel2_Paint;
             pass.PasswordChar = show.Checked ? '\0' : '*';
             string savedUser = Properties.Settings.Default.SavedUser;
             string savedPass = Properties.Settings.Default.SavedPass;
@@ -204,37 +190,12 @@ namespace Polycafe_GUI
         }
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            int radius = panel1.Height / 2;
-            GraphicsPath path = new GraphicsPath();
-            path.AddArc(0, 0, radius, radius, 180, 90);
-            path.AddArc(panel1.Width - radius, 0, radius, radius, 270, 90);
-            path.AddArc(panel1.Width - radius, panel1.Height - radius, radius, radius, 0, 90);
-            path.AddArc(0, panel1.Height - radius, radius, radius, 90, 90);
-            path.CloseAllFigures();
-
-            using (Pen pen = new Pen(Color.SaddleBrown, 2))
-            {
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                e.Graphics.DrawPath(pen, path);
-                Color borderColor = isUserHovered ? Color.Blue : Color.Gray;
-            }
+            
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-            int radius = panel2.Height / 2;
-            GraphicsPath path = new GraphicsPath();
-            path.AddArc(0, 0, radius, radius, 180, 90);
-            path.AddArc(panel2.Width - radius, 0, radius, radius, 270, 90);
-            path.AddArc(panel2.Width - radius, panel2.Height - radius, radius, radius, 0, 90);
-            path.AddArc(0, panel2.Height - radius, radius, radius, 90, 90);
-            path.CloseAllFigures();
-
-            using (Pen pen = new Pen(Color.SaddleBrown, 2))
-            {
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                e.Graphics.DrawPath(pen, path);
-            }
+            
         }
 
         private void user_MouseEnter(object sender, EventArgs e)
@@ -440,6 +401,7 @@ namespace Polycafe_GUI
         {
             isClickingExit = false;
             panel5.Invalidate();
+            btnExit_Click_1(sender, e); 
         }
 
         private void panel5_Click(object sender, EventArgs e)
@@ -449,49 +411,52 @@ namespace Polycafe_GUI
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = user.Text.Trim();
+            string email = user.Text.Trim();
             string password = pass.Text.Trim();
 
-            if (bus.KiemTraDangNhap(username, password))
+            // 1. Kiểm tra đăng nhập
+            if (!bus.KiemTraDangNhap(email, password))
             {
-                // Ghi nhớ tài khoản nếu được chọn
-                if (chkremember.Checked)
-                {
-                    Properties.Settings.Default.SavedUser = username;
-                    Properties.Settings.Default.SavedPass = password;
-                    Properties.Settings.Default.Save();
-                }
-                else
-                {
-                    Properties.Settings.Default.SavedUser = "";
-                    Properties.Settings.Default.SavedPass = "";
-                    Properties.Settings.Default.Save();
-                }
+                MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-                // Lấy vai trò người dùng (giả sử trả về bool)
-                bool vaiTroNguoiDung = bus.LayVaiTro(username);
-
-                // Tạo DTO, có thể giữ vai trò dạng string hoặc bool
-                LoginDTO nhanVien = new LoginDTO
-                {
-                    Email = username,
-                    MatKhau = password,
-                    VaiTro = vaiTroNguoiDung ? "1" : "0"
-                };
-
-                // Hiển thị thông báo đăng nhập thành công
-                MessageBox.Show($"Đăng nhập thành công! Vai trò: {(vaiTroNguoiDung ? "Admin" : "User")}",
-                    "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Mở MainForm truyền tham số vai trò dưới dạng string "1" hoặc "0"
-                MainForm mainForm = new MainForm(vaiTroNguoiDung ? "1" : "0", username);
-                mainForm.Show();
-                this.Hide();
+            // 2. Ghi nhớ tài khoản nếu được chọn
+            if (chkremember.Checked)
+            {
+                Properties.Settings.Default.SavedUser = email;
+                Properties.Settings.Default.SavedPass = password;
             }
             else
             {
-                MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Properties.Settings.Default.SavedUser = "";
+                Properties.Settings.Default.SavedPass = "";
             }
+            Properties.Settings.Default.Save();
+
+            // 3. Lấy thông tin người dùng
+            string tenNhanVien = bus.LayTenNhanVien(email);
+            bool vaiTroNguoiDung = bus.LayVaiTro(email); // true = Admin, false = User
+            string vaiTroStr = vaiTroNguoiDung ? "1" : "0";
+
+            // 4. Tạo DTO người dùng
+            LoginDTO nhanVien = new LoginDTO
+            {
+                Email = email,
+                MatKhau = password,
+                VaiTro = vaiTroStr,
+                HoTen = tenNhanVien
+            };
+            AuthUtil.CurrentUser = nhanVien;
+
+            // 5. Thông báo đăng nhập thành công (chỉ hiện tên nhân viên)
+            MessageBox.Show($"Đăng nhập thành công! Xin chào {tenNhanVien}",
+                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // 6. Mở form chính
+            MainForm mainForm = new MainForm(vaiTroStr, tenNhanVien, email );
+            mainForm.Show();
+            this.Hide();
         }
 
         private void panel4_Click(object sender, EventArgs e)

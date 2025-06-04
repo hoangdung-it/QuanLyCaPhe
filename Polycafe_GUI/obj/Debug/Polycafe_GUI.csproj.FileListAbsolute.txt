@@ -81,21 +81,6 @@ C:\Users\ADMIN\OneDrive\Tài liệu\Dự Án Mẫu_SOF2052\ASM_Project\QuanLyB
 C:\Users\ADMIN\OneDrive\Tài liệu\Dự Án Mẫu_SOF2052\ASM_Project\QuanLyBanHang\Polycafe_GUI\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\ADMIN\OneDrive\Tài liệu\Dự Án Mẫu_SOF2052\ASM_Project\QuanLyBanHang\Polycafe_GUI\bin\Debug\Polycafe_DAL.dll.config
 C:\Users\ADMIN\OneDrive\Tài liệu\Dự Án Mẫu_SOF2052\ASM_Project\QuanLyBanHang\Polycafe_GUI\obj\Debug\Polycafe_GUI.ForgetPassword.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.csproj.AssemblyReference.cache
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.CaiDat.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.ForgetPassword.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.Login.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.MainForm.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.Properties.Resources.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLLoaiSanPham.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLNhanVien.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLPhieuBanHang.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLTheLuuDong.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QuanLySanPham.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.ThongKe.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.Welcome.resources
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.csproj.GenerateResource.cache
-D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.csproj.CoreCompileInputs.cache
 D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\Polycafe_GUI.exe.config
 D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\Polycafe_GUI.exe
 D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\Polycafe_GUI.pdb
@@ -133,6 +118,21 @@ D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\System.Numerics.Vectors.xml
 D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\Polycafe_DAL.pdb
 D:\QuanLyBanHang-main\Polycafe_GUI\bin\Debug\Polycafe_DAL.dll.config
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.csproj.AssemblyReference.cache
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.CaiDat.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.ForgetPassword.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.Login.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.MainForm.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.Properties.Resources.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLLoaiSanPham.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLNhanVien.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLPhieuBanHang.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QLTheLuuDong.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.QuanLySanPham.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.ThongKe.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.Welcome.resources
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.csproj.GenerateResource.cache
+D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.csproj.CoreCompileInputs.cache
 D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe.C335FB63.Up2Date
 D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.exe
 D:\QuanLyBanHang-main\Polycafe_GUI\obj\Debug\Polycafe_GUI.pdb

@@ -64,7 +64,7 @@ namespace Polycafe_GUI
             // pass
             // 
             this.pass.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.pass.Location = new System.Drawing.Point(2, 2);
+            this.pass.Location = new System.Drawing.Point(0, 0);
             this.pass.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pass.Multiline = true;
             this.pass.Name = "pass";
@@ -133,7 +133,7 @@ namespace Polycafe_GUI
             // user
             // 
             this.user.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.user.Location = new System.Drawing.Point(1, 1);
+            this.user.Location = new System.Drawing.Point(0, 0);
             this.user.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.user.Multiline = true;
             this.user.Name = "user";
@@ -148,7 +148,7 @@ namespace Polycafe_GUI
             this.panel1.Controls.Add(this.user);
             this.panel1.Location = new System.Drawing.Point(644, 177);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(299, 37);
+            this.panel1.Size = new System.Drawing.Size(299, 35);
             this.panel1.TabIndex = 11;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -157,7 +157,7 @@ namespace Polycafe_GUI
             this.panel2.Controls.Add(this.pass);
             this.panel2.Location = new System.Drawing.Point(644, 278);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(300, 39);
+            this.panel2.Size = new System.Drawing.Size(300, 36);
             this.panel2.TabIndex = 12;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
@@ -318,7 +318,7 @@ namespace Polycafe_GUI
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Login";
-            this.Text = "Form1";
+            this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Login_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load_1);
             this.panel1.ResumeLayout(false);

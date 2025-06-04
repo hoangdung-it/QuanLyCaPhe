@@ -93,6 +93,8 @@ namespace Polycafe_DAL
 
     public class LoginDAL
     {
+        private static string connectionString = "Data Source=HOANGDUNG;Initial Catalog=PolyCafe;Integrated Security=True;";
+
         public string GetMatKhau(string username)
         {
             string query = "SELECT MatKhau FROM NhanVien WHERE Email = @username";
@@ -105,12 +107,12 @@ namespace Polycafe_DAL
             }
         }
 
-        public bool GetVaiTro(string username)
+        public bool GetVaiTro(string email)
         {
             string query = "SELECT VaiTro FROM NhanVien WHERE Email = @username";
             using (SqlCommand cmd = DBUtil.GetCommand(query, new List<object>(), CommandType.Text))
             {
-                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@username", email);
                 cmd.Connection.Open();
                 object result = cmd.ExecuteScalar();
 
@@ -123,6 +125,18 @@ namespace Polycafe_DAL
                 {
                     return false; // hoặc xử lý khác khi không tìm thấy
                 }
+            }
+        }
+        public string LayTenTheoEmail(string email)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT HoTen FROM NhanVien WHERE Email = @email", conn);
+                cmd.Parameters.AddWithValue("@email", email);
+
+                object result = cmd.ExecuteScalar();
+                return result != null ? result.ToString() : null;
             }
         }
 
@@ -1445,7 +1459,7 @@ namespace Polycafe_DAL
             return dt;
         }
 
-        public DataTable GetStatisticalData(string type)
+        public DataTable GetStatisticalData(string type, DateTime? tuNgay = null, DateTime? denNgay = null)
         {
             DataTable dt = new DataTable();
             string query = "";
@@ -1454,40 +1468,55 @@ namespace Polycafe_DAL
             {
                 case "monthly":
                     query = @"
-                    SELECT pbh.MaNhanVien,
-                           DATEPART(YEAR, pbh.NgayTao) AS Nam,
-                           DATEPART(MONTH, pbh.NgayTao) AS Ky,
-                           SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
-                    FROM PhieuBanHang AS pbh
-                    JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
-                    WHERE pbh.TrangThai = 1
-                    GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(MONTH, pbh.NgayTao)
-                    ORDER BY pbh.MaNhanVien, Nam, Ky;";
+        SELECT pbh.MaNhanVien,
+               DATEPART(YEAR, pbh.NgayTao) AS Nam,
+               DATEPART(MONTH, pbh.NgayTao) AS Ky,
+               SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
+        FROM PhieuBanHang AS pbh
+        JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
+        WHERE pbh.TrangThai = 1
+        GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(MONTH, pbh.NgayTao)
+        ORDER BY pbh.MaNhanVien, Nam, Ky;";
                     break;
+
                 case "weekly":
+                    if (tuNgay == null || denNgay == null)
+                        throw new ArgumentException("TuNgay và DenNgay là bắt buộc cho thống kê tuần.");
+
                     query = @"
-                    SELECT pbh.MaNhanVien,
-                           DATEPART(YEAR, pbh.NgayTao) AS Nam,
-                           DATEPART(WEEK, pbh.NgayTao) AS Ky,
-                           SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
-                    FROM PhieuBanHang AS pbh
-                    JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
-                    WHERE pbh.TrangThai = 1
-                    GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(WEEK, pbh.NgayTao)
-                    ORDER BY pbh.MaNhanVien, Nam, Ky;";
+        SELECT 
+            pbh.MaNhanVien,
+            DATEPART(YEAR, pbh.NgayTao) AS Nam,
+            DATEPART(ISO_WEEK, pbh.NgayTao) AS Ky,
+            SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
+        FROM PhieuBanHang AS pbh
+        JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
+        WHERE 
+            pbh.TrangThai = 1
+            AND pbh.NgayTao BETWEEN @TuNgay AND @DenNgay
+        GROUP BY 
+            pbh.MaNhanVien, 
+            DATEPART(YEAR, pbh.NgayTao), 
+            DATEPART(ISO_WEEK, pbh.NgayTao)
+        ORDER BY 
+            pbh.MaNhanVien, 
+            DATEPART(YEAR, pbh.NgayTao), 
+            DATEPART(ISO_WEEK, pbh.NgayTao);";
                     break;
+
                 case "quarterly":
                     query = @"
-                    SELECT pbh.MaNhanVien,
-                           DATEPART(YEAR, pbh.NgayTao) AS Nam,
-                           DATEPART(QUARTER, pbh.NgayTao) AS Ky,
-                           SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
-                    FROM PhieuBanHang AS pbh
-                    JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
-                    WHERE pbh.TrangThai = 1
-                    GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(QUARTER, pbh.NgayTao)
-                    ORDER BY pbh.MaNhanVien, Nam, Ky;";
+        SELECT pbh.MaNhanVien,
+               DATEPART(YEAR, pbh.NgayTao) AS Nam,
+               DATEPART(QUARTER, pbh.NgayTao) AS Ky,
+               SUM(ctpbh.SoLuong * ctpbh.DonGia) AS TongDoanhThu
+        FROM PhieuBanHang AS pbh
+        JOIN ChiTietPhieu AS ctpbh ON pbh.MaPhieu = ctpbh.MaPhieu
+        WHERE pbh.TrangThai = 1
+        GROUP BY pbh.MaNhanVien, DATEPART(YEAR, pbh.NgayTao), DATEPART(QUARTER, pbh.NgayTao)
+        ORDER BY pbh.MaNhanVien, Nam, Ky;";
                     break;
+
                 default:
                     throw new ArgumentException("Unsupported statistic type: " + type);
             }
@@ -1497,6 +1526,16 @@ namespace Polycafe_DAL
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
+                    // Nếu là thống kê theo tuần thì thêm tham số vào cmd
+                    if (type.ToLower() == "weekly")
+                    {
+                        if (tuNgay == null || denNgay == null)
+                            throw new ArgumentException("TuNgay và DenNgay là bắt buộc cho thống kê tuần.");
+
+                        cmd.Parameters.AddWithValue("@TuNgay", tuNgay.Value.Date);
+                        cmd.Parameters.AddWithValue("@DenNgay", denNgay.Value.Date);
+                    }
+
                     conn.Open();
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     adapter.Fill(dt);
@@ -1507,6 +1546,7 @@ namespace Polycafe_DAL
                 Console.WriteLine("Lỗi khi lấy dữ liệu thống kê dạng " + type + ": " + ex.Message);
                 throw;
             }
+
 
             return dt;
         }
